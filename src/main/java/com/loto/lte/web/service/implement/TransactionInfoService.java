@@ -23,7 +23,7 @@ public class TransactionInfoService implements TransactionInfoInterface {
 
     @Override
     public int doTransaction(JsonObject param) throws ValidatorException {
-        ValidatorUtil.validate(param, "id", "fromAccountIDReference", "fromAccountID","toAccountIDReference","toAccountID","transactionType", "transactionAmount", "currency", "userID");
+        ValidatorUtil.validate(param, "id", "txID","fromAccountIDReference", "fromAccountID","toAccountIDReference","toAccountID","transactionType", "transactionAmount", "currency", "userID");
         return this.transactionInfoDao.doTransaction(param);
     }
 

@@ -1,6 +1,7 @@
 package com.loto.lte.web.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.loto.lte.core.common.TxrIDKeyGenerator;
 import com.loto.lte.core.constant.MessageCode;
 import com.loto.lte.core.constant.StatusCode;
 import com.loto.lte.core.dto.Header;
@@ -8,6 +9,7 @@ import com.loto.lte.core.dto.JsonObject;
 import com.loto.lte.core.dto.JsonObjectArray;
 import com.loto.lte.core.dto.ResponseData;
 import com.loto.lte.core.exception.ValidatorException;
+import com.loto.lte.core.util.CurrentDateUtil;
 import com.loto.lte.web.constant.TransactionType;
 import com.loto.lte.web.service.implement.AccountService;
 import com.loto.lte.web.service.implement.TransactionInfoDetailsService;
@@ -51,6 +53,7 @@ public class TransactionInfoRest {
             int transactionAmount            = jsonObject.getInt("transactionAmount");
             String currency                  = jsonObject.getString("currency");
             String remark                    = jsonObject.getString("remark");
+            String txID                      = jsonObject.getString("txID");
 
             if (fromAccountIDReference <= 0 || fromAccountID == null || fromAccountID.equals("")) {
                 header.setResponseMessage("Require_FromAccountID");
@@ -102,6 +105,8 @@ public class TransactionInfoRest {
                 transactionInfo.setString("currency", currency);
                 transactionInfo.setString("remark", remark);
                 transactionInfo.setInt("userID", userID);
+                transactionInfo.setString("date", CurrentDateUtil.get());
+                transactionInfo.setString("txID", TxrIDKeyGenerator.generate(txID));
 
                 log.info("transactionInfo:"+objectMapper.writeValueAsString(transactionInfo));
                 int saveTransactionInfo = this.transactionInfoService.doTransaction(transactionInfo);
@@ -119,6 +124,7 @@ public class TransactionInfoRest {
                 transactionInfoDetails.setInt("transactionAmount", transactionAmount);
                 transactionInfoDetails.setString("currency", currency);
                 transactionInfoDetails.setInt("userID", userID);
+
                 log.info("transactionInfoDetails:"+objectMapper.writeValueAsString(transactionInfoDetails));
                 int saveTransactionInfoDetails = this.transactionInfoDetailsService.doTransaction(transactionInfoDetails);
                 log.info("saveTransactionInfoDetails:"+saveTransactionInfoDetails);

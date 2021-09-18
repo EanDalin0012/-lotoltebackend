@@ -16,6 +16,7 @@
                 , currency
                 , transaction_at
                 , transaction_by
+                , tx_id
                 , remark
             ) VALUES (
                 #{id}
@@ -26,8 +27,9 @@
                 , #{transactionType}
                 , #{transactionAmount}
                 , #{currency}
-                , to_char(NOW(), 'YYYY-MM-DD hh:mm:ss')
+                , #{date}
                 , #{userID}
+                , #{txID}
                 , #{remark}
             )
     	]]>
@@ -46,6 +48,7 @@
                 , trans.transaction_type
                 , trans.transaction_by          as "createBy"
                 , trans.transaction_at          as "date"
+                ,trans.tx_id										as "txrID"
           FROM transaction_info as trans
           INNER JOIN account as acc on acc."id" = trans.to_account_id_reference
           WHERE trans.from_account_id_reference = #{id}
@@ -67,6 +70,7 @@
                 , trans.transaction_type
                 , trans.transaction_by          as "createBy"
                 , trans.transaction_at          as "date"
+                ,trans.tx_id					as "txrID"
           FROM transaction_info as trans
           INNER JOIN account as acc on acc."id" = trans.from_account_id_reference
           WHERE trans.to_account_id_reference = #{id}

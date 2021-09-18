@@ -1,5 +1,7 @@
 package com.loto.lte.core.util;
 
+import com.loto.lte.core.common.TxrIDKeyGenerator;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -36,5 +38,7 @@ public class CurrentDateUtil {
 
         System.out.println(date);
         System.out.println(CurrentDateUtil.getCurrentUtcTime());
+
+        System.out.println("TxrIDKeyGenerator:"+TxrIDKeyGenerator.generate("Dsp"));
     }
 }
