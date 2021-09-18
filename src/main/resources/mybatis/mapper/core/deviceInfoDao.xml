@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.loto.lte.core.dao.DeviceInfoDao">
+
+    <insert id="save">
+        <![CDATA[
+		  	INSERT INTO device_info
+				(
+				    id
+				 , user_agent
+				, os
+				, browser
+				, device
+				, os_version
+				, device_type
+				, browser_version
+				, orientation
+				, user_name
+				, create_date
+				, modify_date
+				, ip
+				)
+			VALUES(
+			    #{id}
+				, #{userAgent}
+				, #{os}
+				, #{browser}
+				, #{device}
+				, #{osVersion}
+				, #{deviceType}
+				, #{browserVersion}
+				, #{orientation}
+				, #{userName}
+				, #{date}
+				, #{date}
+				, #{networkIP}
+				);
+	     ]]>
+    </insert>
+
+    <update id="updateDeviceInfo">
+        <![CDATA[
+            UPDATE device_info
+			SET
+			     os            = #{os}
+			    , browser       = #{browser}
+			    , device        = #{device}
+			    , os_version    = #{osVersion}
+			    , device_type        = #{deviceType}
+			    , browser_version    = #{browserVersion}
+			    , orientation        = #{orientation}
+			    , modify_date        = #{date}
+			    , ip                 = #{networkIP}
+			WHERE user_name = #{userName} and user_agent = #{userAgent};
+    	]]>
+    </update>
+
+
+    <select id="count" resultType="java.lang.Integer">
+        <![CDATA[
+		  SELECT
+	     	COUNT (*)
+	      FROM "device_info"
+	     ]]>
+    </select>
+
+    <select id="inquiry" resultType="JsonObject">
+        <![CDATA[
+		  SELECT
+                 dev.id
+                , dev.user_agent as "userAgent"
+                , dev.os
+                , dev.os_version    as "osVersion"
+                , dev.browser
+                , dev.browser_version   as "browserVersion"
+                , dev.device
+                , dev.device_type   as "deviceType"
+                , dev.orientation
+                , dev.ip
+                , modify_date        as "date"
+          FROM device_info dev
+          WHERE dev.user_name = #{userName};
+	     ]]>
+    </select>
+
+    <select id="inquiryByUserAgent" resultType="JsonObject">
+        <![CDATA[
+		  SELECT
+                 dev.id
+                , dev.user_agent as "userAgent"
+                , dev.os
+                , dev.os_version    as "osVersion"
+                , dev.browser
+                , dev.browser_version   as "browserVersion"
+                , dev.device
+                , dev.device_type   as "deviceType"
+                , dev.orientation
+                , dev.ip
+          FROM device_info dev
+          WHERE dev.user_name = #{userName} and dev.user_agent = #{userAgent};
+	     ]]>
+    </select>
+
+    <delete id="deleteDeviceInfo">
+        DELETE from device_info
+        WHERE create_by = #{userID} and user_agent = #{userAgent};
+    </delete>
+
+</mapper>

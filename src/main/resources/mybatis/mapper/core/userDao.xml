@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.loto.lte.core.dao.UserDao">
+
+    <select id="loadUserByName" resultType="JsonObject">
+        <![CDATA[
+            SELECT
+		  		u.id
+            , u.first_name    as "firstName"
+            , u.last_name   as "lastName"
+            , u.user_name   as "userName"
+            , u.date_birth  as "dateBirth"
+            , u.gender
+            , u.resource_id         as "resourceID"
+            , u.phone_number        as "phoneNumber"
+            , u.other_phone_number  as "otherPhoneNumber"
+			, u.create_date			as "createDate"
+			, u.address
+			, u.is_first_login       as "isFirstLogin"
+        FROM user_ u
+        WHERE u.user_name = #{userName}
+	     ]]>
+    </select>
+
+    <select id="inquiryUserInfoByID" resultType="JsonObject">
+        <![CDATA[
+            SELECT
+                    u.id
+                , u.first_name    as "firstName"
+                , u.last_name   as "lastName"
+                , u.user_name   as "userName"
+                , u.date_birth  as "dateBirth"
+                , u.gender
+                , u.resource_id         as "resourceID"
+                , u.phone_number        as "phoneNumber"
+                , u.other_phone_number  as "otherPhoneNumber"
+                , u.create_date			as "createDate"
+                , u.address
+                , u.user_name           as "userName"
+            FROM user_ u
+            WHERE u.id = #{userID}
+	     ]]>
+    </select>
+
+    <insert id="addNewUser">
+        <![CDATA[
+            INSERT INTO user_
+            (
+                id
+                , account_expired
+                , account_locked
+                , credentials_expired
+                , enabled
+
+                , is_first_login
+                , password
+                , user_name
+                , status
+                , create_date
+
+                , modify_date
+
+                , create_by
+                , first_name
+                , last_name
+                , gender
+                , date_birth
+
+                , phone_number
+                , other_phone_number
+                , resource_id
+                , remark
+                , address
+                , identify_info_id
+                , identify_info_resource_id
+
+            ) VALUES (
+                #{id}
+                , false
+                , false
+                , false
+                , true
+
+                , true
+                , #{password}
+                , #{userName}
+                , #{userID}
+                , #{date}
+                , #{date}
+                , #{userID}
+
+                , #{firstName}
+                , #{lastName}
+                , #{gender}
+                , #{dateBirth}
+                , #{phoneNumber}
+
+                , #{otherPhoneNumber}
+                , #{resourceID}
+                , #{remark}
+                , #{address}
+                , #{identifyInfoID}
+                , #{identifyInfoResourceId}
+            )
+    	]]>
+    </insert>
+
+    <update id="updateUserInfo">
+        <![CDATA[
+            UPDATE user_
+			SET
+			    first_name      = #{firstName}
+			    , last_name     = #{lastName}
+			    , gender        = #{gender}
+			    , date_birth    = #{dateBirth}
+			    , phone_number  = #{phoneNumber}
+			    , other_phone_number    = #{otherPhone}
+			    , address               = #{address}
+			    , resource_id           = #{resourceID}
+			WHERE id 	= #{userID}
+    	]]>
+    </update>
+
+    <update id="resetPassword">
+        <![CDATA[
+            UPDATE user_
+			SET
+				password 	        = #{password}
+				, is_first_login    = #{isFirstLogin}
+			WHERE id 	= #{id} and user_name = #{userName}
+    	]]>
+    </update>
+
+    <select id="count" resultType="java.lang.Integer">
+        <![CDATA[
+		  SELECT
+	     	COUNT (*)
+	      FROM "user_"
+	     ]]>
+    </select>
+
+</mapper>

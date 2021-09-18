@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.loto.lte.web.dao.TransactionInfoDao">
+
+    <insert id="doTransaction">
+        <![CDATA[
+            INSERT INTO transaction_info
+            (
+                id
+                , from_account_id
+                , from_account_id_reference
+                , to_account_id
+                , to_account_id_reference
+                , transaction_type
+                , transaction_amount
+                , currency
+                , transaction_at
+                , transaction_by
+                , remark
+            ) VALUES (
+                #{id}
+                , #{fromAccountID}
+                , #{fromAccountIDReference}
+                , #{toAccountID}
+                , #{toAccountIDReference}
+                , #{transactionType}
+                , #{transactionAmount}
+                , #{currency}
+                , to_char(NOW(), 'YYYY-MM-DD hh:mm:ss')
+                , #{userID}
+                , #{remark}
+            )
+    	]]>
+    </insert>
+
+
+    <select id="inquiryDepositTransactionHistory" resultType="JsonObject">
+        <![CDATA[
+		  SELECT
+                trans."id"
+                , trans.to_account_id           as "accountID"
+                , acc.account_name              as "accountName"
+                , trans.to_account_id_reference as "accountId"
+                , trans.transaction_amount      as "amount"
+                , trans.currency                as "currency"
+                , trans.transaction_type
+                , trans.transaction_by          as "createBy"
+                , trans.transaction_at          as "date"
+          FROM transaction_info as trans
+          INNER JOIN account as acc on acc."id" = trans.to_account_id_reference
+          WHERE trans.from_account_id_reference = #{id}
+          and trans.from_account_id = #{accountID}
+          and  trans.transaction_type = #{transactionType}
+          ORDER BY trans."id" DESC
+	     ]]>
+    </select>
+
+    <select id="inquiryWithdrawalCashOutTransactionHistory" resultType="JsonObject">
+        <![CDATA[
+		  SELECT
+                trans."id"
+                , trans.from_account_id           as "accountID"
+                , acc.account_name              as "accountName"
+                , trans.from_account_id_reference as "accountId"
+                , trans.transaction_amount      as "amount"
+                , trans.currency                as "currency"
+                , trans.transaction_type
+                , trans.transaction_by          as "createBy"
+                , trans.transaction_at          as "date"
+          FROM transaction_info as trans
+          INNER JOIN account as acc on acc."id" = trans.from_account_id_reference
+          WHERE trans.to_account_id_reference = #{id}
+		    and trans.to_account_id = #{accountID}
+			and  trans.transaction_type = #{transactionType}
+          ORDER BY trans."id" DESC;
+	     ]]>
+    </select>
+
+
+    <select id="count" resultType="java.lang.Integer">
+        <![CDATA[
+		  SELECT
+	     	COUNT (*)
+	      FROM "transaction_info"
+	     ]]>
+    </select>
+
+
+
+</mapper>

@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.loto.lte.web.dao.AccountDao">
+
+    <select id="inquirySubAccount" resultType="JsonObject">
+        <![CDATA[
+            WITH RECURSIVE employees_tree as (
+             select
+                e1."id"
+                , e1.account_name      as "accountName"
+                , e1.account_id        as "accountID"
+                , e1.account_type      as "accountType"
+                , e1.account_balance   as "accountBalance"
+                , e1.account_currency   as "currency"
+                , e1.account_status     as "status"
+             from account e1
+             WHERE e1.base_on_id = #{mainAccountID}
+             union all
+
+             select
+                e2."id"
+                , e2.account_name      as "accountName"
+                , e2.account_id        as "accountID"
+                , e2.account_type      as "accountType"
+                , e2.account_balance   as "accountBalance"
+                , e2.account_currency   as "currency"
+                , e2.account_status     as "status"
+              from account e2
+             join employees_tree et on et.id = e2.base_on_id
+
+            ) select * from employees_tree ORDER BY "id" DESC;
+	     ]]>
+    </select>
+
+    <select id="inquiryAccountByUserID" resultType="JsonObject">
+        <![CDATA[
+            SELECT
+                acc."id"
+                , acc.account_name      as "accountName"
+                , acc.account_id        as "accountID"
+                , acc.account_type      as "accountType"
+                , acc.account_balance   as "accountBalance"
+                , acc.account_status    as "status"
+                , acc.account_currency   as "currency"
+            FROM account as acc
+            WHERE acc.user_id = #{userID};
+	     ]]>
+    </select>
+
+    <select id="inquiryAccountByID" resultType="JsonObject">
+        <![CDATA[
+            SELECT
+                acc."id"
+                , acc.account_name      as "accountName"
+                , acc.account_id        as "accountID"
+                , acc.account_type      as "accountType"
+                , acc.account_balance   as "accountBalance"
+                , acc.account_status    as "status"
+                , acc.account_currency   as "currency"
+            FROM account as acc
+            WHERE acc.id = #{id};
+	     ]]>
+    </select>
+
+    <insert id="save">
+        <![CDATA[
+            INSERT INTO account
+            (
+                id
+                , account_name
+                , account_id
+                , account_type
+                , account_balance
+                , account_status
+                , create_by
+                , create_at
+                , modify_at
+                , user_id
+                , account_currency
+                , base_on_id
+            ) VALUES (
+                #{id}
+                , #{accountName}
+                , #{accountID}
+                , #{accountType}
+                , #{accountBalance}
+                , #{accountStatus}
+                , #{createBy}
+                , #{date}
+                , #{date}
+                , #{userID}
+                , #{currency}
+                , #{baseOnID}
+            )
+    	]]>
+    </insert>
+
+
+    <select id="count" resultType="java.lang.Integer">
+        <![CDATA[
+		  SELECT
+	     	COUNT (*)
+	      FROM "account"
+	     ]]>
+    </select>
+
+    <select id="inquiryUserInfoByAccountID" resultType="JsonObject">
+        <![CDATA[
+            SELECT
+                user_id as "userID"
+                , id
+                , account_name as "accountName"
+                , account_id as "accountID"
+                , account_type as "accountType"
+                , account_balance as "accountBalance"
+                , account_status as "status"
+                , account_currency as "currency"
+            FROM account
+            WHERE id 	= #{id} and account_id = #{accountID}
+	     ]]>
+    </select>
+
+    <select id="maxAccountID" resultType="java.lang.Integer">
+        <![CDATA[
+		  SELECT MAX(account_id)
+        FROM account
+        WHERE account_id != '999999999';
+	     ]]>
+    </select>
+
+    <update id="updateAccountName">
+        <![CDATA[
+            UPDATE account
+			SET
+			    account_name      = #{accountName}
+			WHERE id 	= #{id} and account_id = #{accountID}
+    	]]>
+    </update>
+
+    <update id="updateAccountBalance">
+        <![CDATA[
+            UPDATE account
+			SET
+			    account_balance      = #{accountBalance}
+			WHERE id 	= #{id} and account_id = #{accountID}
+    	]]>
+    </update>
+
+    <update id="disableAccount">
+        <![CDATA[
+            UPDATE account
+			SET
+			    account_status        = #{status}
+                , disable_by          = #{userID}
+                , remark              = #{remark}
+			WHERE id 	= #{id} and account_id = #{accountID}
+    	]]>
+    </update>
+
+</mapper>

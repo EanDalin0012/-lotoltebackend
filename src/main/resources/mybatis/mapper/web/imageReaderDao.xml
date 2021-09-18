@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.loto.lte.web.dao.ImageReaderDao">
+
+    <select id="inquiryResourcesID" resultType="JsonObject">
+        <![CDATA[
+            SELECT
+                res.id
+                , res.file_name     as "fileName"
+                , res.file_type     as "fileType"
+                , res.file_size     as "fileSize"
+                , res.file_extension    as "fileExtension"
+                , res.file_source       as "fileSource"
+            FROM
+            resource res
+            WHERE res.id = #{id};
+	     ]]>
+    </select>
+</mapper>

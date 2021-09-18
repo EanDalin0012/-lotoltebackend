@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.loto.lte.web.dao.IdentifyDao">
+
+    <insert id="save">
+        <![CDATA[
+            INSERT INTO identify_info
+            (
+                id
+                , identify_id
+                , resource_id
+                , status
+                , create_by
+                , create_at
+            ) VALUES (
+                #{id}
+                , #{identifyID}
+                , #{resourceID}
+                , #{status}
+                , #{userID}
+                , to_char(NOW(), 'YYYYMMDD')
+            )
+    	]]>
+    </insert>
+
+
+    <select id="count" resultType="java.lang.Integer">
+        <![CDATA[
+		  SELECT
+	     	COUNT (*)
+	      FROM "identify_info"
+	     ]]>
+    </select>
+
+
+</mapper>

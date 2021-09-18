@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.loto.lte.web.dao.TransactionInfoDetailsDao">
+
+    <insert id="doTransaction">
+        <![CDATA[
+            INSERT INTO transaction_info_detail
+            (
+                id
+                , transaction_info_id
+                , from_account_id_reference
+                , from_account_balance
+                , to_account_id_reference
+                , to_account_balance
+                , transaction_amount
+                , currency
+                , transaction_type
+                , transaction_at
+                , transaction_by
+            ) VALUES (
+                #{id}
+                , #{transactionInfoId}
+                , #{fromAccountIDReference}
+                , #{fromAccountBalance}
+                , #{toAccountIDReference}
+                , #{toAccountBalance}
+                , #{transactionAmount}
+                , #{currency}
+                , #{transactionType}
+                , to_char(NOW(), 'YYYY-MM-DD hh:mm:ss')
+                , #{userID}
+            )
+    	]]>
+    </insert>
+
+    <select id="count" resultType="java.lang.Integer">
+        <![CDATA[
+		  SELECT
+	     	COUNT (*)
+	      FROM "transaction_info_detail"
+	     ]]>
+    </select>
+
+</mapper>
